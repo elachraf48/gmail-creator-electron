@@ -159,8 +159,6 @@ const getVerificationCode = (page, sim_id, enable, option) => new Promise(async 
             await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button')
             await waitForSec(1000)
             el = await page.$('#view_container > div > div > div.pwWryf.bxPAYd > div > div.WEQkZc > div > form > span > section > div > div > div.d2CFce.cDSmF.OcVpRe.PkCcVd > div > div.LXRPh > div.dEOOab.RxsGPe > div')
-            if(el) console.log('yes') 
-            else console.log('not')
         }
 
         resolve()
@@ -182,7 +180,7 @@ module.exports.startBrowser = async (i, proxy, sim_api, option, executablePath =
             defaultViewport: null,
             args: [
                 '--start-maximized',
-                // `--proxy-server=${proxy}`
+                `--proxy-server=${proxy}`
             ]
         })
 
@@ -223,6 +221,8 @@ module.exports.startBrowser = async (i, proxy, sim_api, option, executablePath =
 
         await waitForSec(1000)
 
+        await page.evaluate(() => document.querySelector('input[type="tel"]#phoneNumberId').value = '')
+
         await page.type('#view_container > div > div > div.pwWryf.bxPAYd > div > div.WEQkZc > div > form > span > section > div > div > div.akwVEf.OcVpRe > div.d2CFce.cDSmF.OcVpRe > div > div.aCsJod.oJeWuf > div > div.Xb9hP > input', user_infos.email_recovery, option)
 
         await page.select('#month', parseInt(user_infos.birthday.month).toString())
@@ -234,14 +234,33 @@ module.exports.startBrowser = async (i, proxy, sim_api, option, executablePath =
         await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button')
 
         await waitForSec((2000))
+        const privacy1 = await page.$('input[type="hidden"][name="__msgId__"]')
+        if(privacy1) {
+            await page.waitForSelector('div[aria-labelledby="selectionc10"] > * > div')
+            await page.click('div[aria-labelledby="selectionc10"] > * > div')
+        }
+
+        await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div.dG5hZc > div.qhFLie > div > div > button')
+
+        await waitForSec((2000))
+        const privacy2 = await page.$('div:nth-child(2) > div > div > button[data-idom-class]')
+        if(privacy2) await page.click('div:nth-child(2) > div > div > button[data-idom-class]')
+
+        await waitForSec((2000))
+        const privacy3 = await page.$('#view_container > div > div > div > div > div > div > div > div > div > button[data-idom-class]')
+        if(privacy3) await page.click('#view_container > div > div > div > div > div > div > div > div > div > button[data-idom-class]')
+
+        await waitForSec((2000))
         // await page.waitForSelector('button[type="button"]#learnMore')
         // await page.waitForSelector('button[type="button"]#moreOptions')
-        await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div.dG5hZc > div.qhFLie > div > div > button')
+        const btn01 = await page.$('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div.dG5hZc > div.qhFLie > div > div > button')
+        if(btn01) await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div.dG5hZc > div.qhFLie > div > div > button')
 
         await waitForSec((2000))
         // await page.waitForSelector('a[data-link="privacy"][href="https://policies.google.com/terms?hl=en&gl=US"]')
         // await page.waitForSelector('a[data-link="privacy"][href="https://policies.google.com/privacy?hl=en&gl=US"]')
-        await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button')
+        const btn02 = await page.$('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button')
+        if(btn02) await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button')
 
         await page.waitForNavigation()
 

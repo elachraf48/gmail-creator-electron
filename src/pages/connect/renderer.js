@@ -2,19 +2,14 @@ const { ipcRenderer } = require('electron')
 
 const formSelector = document.querySelector('form')
 
-const use_api_check = document.getElementById('use-api-check')
-const country_input = document.getElementById('country-input')
-const operator_input = document.getElementById('operator-input')
-const product_input = document.getElementById('product-input')
-
 const select_browser = document.getElementById('select-browser')
 const select_browser_text = document.getElementById('select-browser-text')
 
 const select_profile_path = document.getElementById('select-profile-path')
 const select_profile_path_text = document.getElementById('select-profile-path-text')
 
-const save_data = document.getElementById('save-data')
-const save_data_text = document.getElementById('save-data-text')
+const import_users = document.getElementById('import-users')
+const import_users_text = document.getElementById('import-users-text')
 
 const select_proxys = document.getElementById('select-proxys')
 const proxys_port = document.getElementById('proxys-port')
@@ -47,42 +42,29 @@ formSelector.addEventListener('submit', e => {
     e.preventDefault()
 
     const fields = {
-        api_5sim: {
-            enable: use_api_check.checked,
-            country: country_input.value,
-            operator: operator_input.value,
-            product: product_input.value
-        },
         browser_path: select_browser_text.value,
         profiles_path: select_profile_path_text.value,
-        save_file_path: save_data_text.value,
+        import_users_path: import_users_text.value,
         option: {
             delay: option_delay.value
         },
         proxys: proxy_list.value.split('\n')
     }
 
-    // if(fields.api_5sim.enable) {
-    //     if(!fields.api_5sim.country || !fields.api_5sim.operator || !fields.api_5sim.product || !fields.browser_path || fields.option.delay !== '' || !fields.proxys.length || !fields.save_file_path) return ipcRenderer.send('message-box', { type: 'error', message: 'fields are required' })
-    // }
-    // else {
-    //     if(!fields.browser_path || fields.option.delay !== '' || !fields.proxys.length || !fields.save_file_path) return ipcRenderer.send('message-box', { type: 'error', message: 'fields are required' })
-    // }
+    if(fields.proxys.some(proxy => isProxysValid(proxy))) return ipcRenderer.send('message-box-', { type: 'error', message: 'One or more proxy has no port!' })
+    if(fields.proxys.some(proxy => !isProxysAndPortValid(proxy))) return ipcRenderer.send('message-box-', { type: 'error', message: 'One or more proxy are not correct!' })
 
-    if(fields.proxys.some(proxy => isProxysValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy has no port!' })
-    if(fields.proxys.some(proxy => !isProxysAndPortValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy are not correct!' })
-
-    ipcRenderer.send('start-browser', fields)
+    ipcRenderer.send('start-browser-', fields)
 })
 
 stop_btn.addEventListener('click', () => {
-    ipcRenderer.send('script-status', 'stop')
+    ipcRenderer.send('script-status-', 'stop')
 })
 
-select_browser.addEventListener('click', () => ipcRenderer.send('select-browser'))
-select_profile_path.addEventListener('click', () => ipcRenderer.send('select-profile-path'))
-save_data.addEventListener('click', () => ipcRenderer.send('save-data-path'))
-select_proxys.addEventListener('click', () => ipcRenderer.send('select-proxy-list'))
+select_browser.addEventListener('click', () => ipcRenderer.send('select-browser-'))
+select_profile_path.addEventListener('click', () => ipcRenderer.send('select-profile-path-'))
+import_users.addEventListener('click', () => ipcRenderer.send('import-users-path-'))
+select_proxys.addEventListener('click', () => ipcRenderer.send('select-proxy-list-'))
 
 proxys_port_seter.addEventListener('click', () => {
     // console.log(proxy_list.value, proxys_port.value)
@@ -99,8 +81,8 @@ ipcRenderer.on('select-profile-path-result', (_, data) => {
     select_profile_path_text.value = data
 })
 
-ipcRenderer.on('save-data-path-result', (_, data) => {
-    save_data_text.value = data
+ipcRenderer.on('import-users-path-result', (_, data) => {
+    import_users_text.value = data
 })
 
 ipcRenderer.on('select-proxy-list-result', (_, data) => {
