@@ -1,15 +1,14 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
+const { readFile } = require('fs/promises')
 const { createWindowCreation } = require('./pages/create/index.js')
 const { createWindowConnect } = require('./pages/connect/index.js')
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit()
 }
 
 const createWindow = () => {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -17,30 +16,26 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
-      devTools: true,
-      
+      devTools: false,
     },
   })
 
-  // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
-
   mainWindow.setMenu(null)
-  mainWindow.setAlwaysOnTop(true)
 
+  ipcMain.on('start-create-window', () => {
+    createWindowCreation()
+    mainWindow.close()
+  })
   
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  ipcMain.on('start-connect-window', () => {
+    createWindowConnect()
+    mainWindow.close()
+  })
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
@@ -48,22 +43,28 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
-
-ipcMain.on('start-create-window', () => {
-  createWindowCreation()
-  BrowserWindow.getAllWindows()[1].close()
+ipcMain.on('select-browser', async event => {
+  const { filePaths, canceled } = await dialog.showOpenDialog({ defaultPath: 'C:\\Program Files\\Google\\Chrome\\Application', filters: [{ name: 'Browser', extensions: ['exe'] }] })
+  if(canceled) return console.log('canceled!')
+  event.reply('select-browser-result', filePaths[0])
 })
 
-ipcMain.on('start-connect-window', () => {
-  createWindowConnect()
-  BrowserWindow.getAllWindows()[1].close()
+ipcMain.on('select-profile-path', async event => {
+  const { filePaths, canceled } = await dialog.showOpenDialog({ defaultPath: app.getPath('documents'), properties: [ 'openDirectory', 'promptToCreate' ] })
+  if(canceled) return console.log('canceled!')
+  event.reply('select-profile-path-result', filePaths[0])
 })
+
+ipcMain.on('select-proxy-list', async event => {
+  const { filePaths, canceled } = await dialog.showOpenDialog({ defaultPath: app.getPath('home'), filters:[{ name: 'Text File', extensions: ['txt'] }] })
+  if(canceled) return console.log('canceled!')
+  const data = await readFile(filePaths[0], { encoding: 'utf8' })
+  event.reply('select-proxy-list-result', data)
+})
+
+ipcMain.on('message-box', (_, { type, message }) => dialog.showMessageBox({ type, message, buttons: ['OK'], title: type }))

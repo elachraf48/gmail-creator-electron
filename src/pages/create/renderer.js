@@ -72,7 +72,7 @@ formSelector.addEventListener('submit', e => {
     if(fields.proxys.some(proxy => isProxysValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy has no port!' })
     if(fields.proxys.some(proxy => !isProxysAndPortValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy are not correct!' })
 
-    ipcRenderer.send('start-browser', fields)
+    ipcRenderer.send('start-browser-create', fields)
 })
 
 stop_btn.addEventListener('click', () => {
@@ -85,7 +85,6 @@ save_data.addEventListener('click', () => ipcRenderer.send('save-data-path'))
 select_proxys.addEventListener('click', () => ipcRenderer.send('select-proxy-list'))
 
 proxys_port_seter.addEventListener('click', () => {
-    // console.log(proxy_list.value, proxys_port.value)
     const port = proxys_port.value
     const list = proxy_list.value.split('\n').filter(item => isProxysAndPortValid(item) || isProxysValid(item))
     proxy_list.value = list.map(item => isProxysValid(item) ? `${item}:${port}` : item).join('\n')

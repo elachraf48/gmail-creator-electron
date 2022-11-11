@@ -1,4 +1,6 @@
 const { ipcRenderer } = require('electron')
+const { remote } = require('electron')
+const { dialog } = remote.require('electron')
 
 const formSelector = document.querySelector('form')
 
@@ -51,23 +53,22 @@ formSelector.addEventListener('submit', e => {
         proxys: proxy_list.value.split('\n')
     }
 
-    if(fields.proxys.some(proxy => isProxysValid(proxy))) return ipcRenderer.send('message-box-', { type: 'error', message: 'One or more proxy has no port!' })
-    if(fields.proxys.some(proxy => !isProxysAndPortValid(proxy))) return ipcRenderer.send('message-box-', { type: 'error', message: 'One or more proxy are not correct!' })
+    if(fields.proxys.some(proxy => isProxysValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy has no port!' })
+    if(fields.proxys.some(proxy => !isProxysAndPortValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy are not correct!' })
 
-    ipcRenderer.send('start-browser-', fields)
+    ipcRenderer.send('start-browser-connect', fields)
 })
 
 stop_btn.addEventListener('click', () => {
-    ipcRenderer.send('script-status-', 'stop')
+    ipcRenderer.send('script-status', 'stop')
 })
 
-select_browser.addEventListener('click', () => ipcRenderer.send('select-browser-'))
-select_profile_path.addEventListener('click', () => ipcRenderer.send('select-profile-path-'))
-import_users.addEventListener('click', () => ipcRenderer.send('import-users-path-'))
-select_proxys.addEventListener('click', () => ipcRenderer.send('select-proxy-list-'))
+select_browser.addEventListener('click', () => ipcRenderer.send('select-browser'))
+select_profile_path.addEventListener('click', () => ipcRenderer.send('select-profile-path'))
+import_users.addEventListener('click', () => ipcRenderer.send('import-users-path'))
+select_proxys.addEventListener('click', () => ipcRenderer.send('select-proxy-list'))
 
 proxys_port_seter.addEventListener('click', () => {
-    // console.log(proxy_list.value, proxys_port.value)
     const port = proxys_port.value
     const list = proxy_list.value.split('\n').filter(item => isProxysAndPortValid(item) || isProxysValid(item))
     proxy_list.value = list.map(item => isProxysValid(item) ? `${item}:${port}` : item).join('\n')
