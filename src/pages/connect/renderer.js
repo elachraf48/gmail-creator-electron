@@ -1,6 +1,4 @@
 const { ipcRenderer } = require('electron')
-const { remote } = require('electron')
-const { dialog } = remote.require('electron')
 
 const formSelector = document.querySelector('form')
 
@@ -90,8 +88,8 @@ ipcRenderer.on('select-proxy-list-result', (_, data) => {
     proxy_list.value = data
 })
 
-ipcRenderer.on('indicator-result', (_, { value, from }) => {
-    indicator.value = `${value} from ${from}`
+ipcRenderer.on('indicator-result', (_, { value, from, proxy }) => {
+    indicator.value = `${value} from ${from} --${proxy}`
     if(value <= from) {
         start_btn.classList.add('d-none')
         stop_btn.classList.remove('d-none')
@@ -99,6 +97,8 @@ ipcRenderer.on('indicator-result', (_, { value, from }) => {
         stop_btn.classList.add('d-none')
         start_btn.classList.remove('d-none')
     }
+    
+    if(isProxysAndPortValid(proxy)) proxy_list.value = proxy_list.value.split('\n').filter(p => p !== proxy).join('\n')
 })
 
 ipcRenderer.on('indicator-end', () => {
@@ -106,6 +106,7 @@ ipcRenderer.on('indicator-end', () => {
     stop_btn.classList.add('d-none')
     start_btn.classList.remove('d-none')
 
+    if(isProxysAndPortValid(proxy)) proxy_list.value = proxy_list.value.split('\n').filter(p => p !== proxy).join('\n')
 })
 
 use_api_check.addEventListener('change', e => checkAPISim(e.target.checked))

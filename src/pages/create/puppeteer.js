@@ -167,7 +167,7 @@ const getVerificationCode = (page, sim_id, enable, option) => new Promise(async 
     }
 })
 
-module.exports.startBrowser = async (i, proxy, sim_api, option, executablePath = undefined, userDataDir = undefined) => new Promise(async (resolve, reject) => {
+module.exports.startBrowser = async (proxy, sim_api, option, executablePath = undefined, userDataDir = undefined) => new Promise(async (resolve, reject) => {
 
     // (index, proxy_list[index], sim_api, type_option, browserPath, profilesPath)
 

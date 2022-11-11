@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
 const { readFile } = require('fs/promises')
 const { createWindowCreation } = require('./pages/create/index.js')
@@ -24,13 +24,28 @@ const createWindow = () => {
   mainWindow.setMenu(null)
 
   ipcMain.on('start-create-window', () => {
-    createWindowCreation()
-    mainWindow.close()
+    createWindowCreation(mainWindow)
+    mainWindow.hide()
   })
   
   ipcMain.on('start-connect-window', () => {
-    createWindowConnect()
-    mainWindow.close()
+    createWindowConnect(mainWindow)
+    mainWindow.hide()
+  })
+
+  ipcMain.on('start-open-window', () => {
+    createWindowConnect(mainWindow)
+    mainWindow.hide()
+  })
+
+  ipcMain.on('start-not-spam-window', () => {
+    createWindowConnect(mainWindow)
+    mainWindow.hide()
+  })
+
+  ipcMain.on('start-warmup-window', () => {
+    createWindowConnect(mainWindow)
+    mainWindow.hide()
   })
 }
 

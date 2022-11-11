@@ -2,20 +2,25 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
 const { start } = require('./start-connect.js')
 
-module.exports.createWindowConnect = () => {
+const devTools = false
+
+module.exports.createWindowConnect = parent => {
   const mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
+    parent,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
-      devTools: false
+      devTools
     },
+    
   })
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
   mainWindow.setMenu(null)
+  if(devTools) mainWindow.webContents.openDevTools()
 }
 
 ipcMain.on('import-users-path', async event => {
