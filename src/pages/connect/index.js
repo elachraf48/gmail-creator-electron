@@ -14,8 +14,7 @@ module.exports.createWindowConnect = parent => {
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
       devTools
-    },
-    
+    },    
   })
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'))

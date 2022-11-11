@@ -8,6 +8,8 @@ if (require('electron-squirrel-startup')) {
   app.quit()
 }
 
+const abc = "edffef"
+
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
