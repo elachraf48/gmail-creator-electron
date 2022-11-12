@@ -16,6 +16,8 @@ module.exports.createWindowWarmUp = parent => {
       devTools
     },    
   })
+  
+  parent.hide()
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
   mainWindow.setMenu(null)

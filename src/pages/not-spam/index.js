@@ -17,6 +17,8 @@ module.exports.createWindowNotSpam = parent => {
     },    
   })
 
+  parent.hide()
+
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
   mainWindow.setMenu(null)
   if(devTools) mainWindow.webContents.openDevTools()

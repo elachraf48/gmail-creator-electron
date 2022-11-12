@@ -14,7 +14,7 @@ module.exports.startBrowser = async (proxy, option, executablePath = undefined, 
             defaultViewport: null,
             args: [
                 '--start-maximized',
-                // `--proxy-server=${proxy}`
+                `--proxy-server=${proxy}`
             ]
         })
 

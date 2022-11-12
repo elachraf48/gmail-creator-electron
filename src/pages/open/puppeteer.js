@@ -14,7 +14,7 @@ module.exports.startBrowser = async (proxy, option, executablePath = undefined, 
             defaultViewport: null,
             args: [
                 '--start-maximized',
-                // `--proxy-server=${proxy}`
+                `--proxy-server=${proxy}`
             ]
         })
 
@@ -35,7 +35,9 @@ module.exports.startBrowser = async (proxy, option, executablePath = undefined, 
 
         // **************************************************************************************************************
 
-        console.log(`${userDataDir} == from ${profiles.from} to ${profiles.to}`)
+        
+
+        // console.log(`${userDataDir} == from ${profiles.from} to ${profiles.to}`)
 
         // await page.waitForNavigation()
         // await browser.close()

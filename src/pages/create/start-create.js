@@ -4,12 +4,12 @@ const { startBrowser } = require('./puppeteer.js')
 
 module.exports.start = async (fields, sender) => {
 
-    const { proxys, save_file_path, api_5sim, option, browser_path, profiles_path } = fields
+    const { proxys, save_file_path, api_sim, option, browser_path, profiles_path } = fields
 
     try {
         for(let index in proxys) {
             sender.send('indicator-result', { value: parseInt(index) + 1, from: proxys.length, proxy: proxys[index] })
-            const user_infos = await startBrowser(proxys[index], api_5sim, option, browser_path, browser_path, profiles_path ? `${profiles_path}\\P-${index.toString()}` : undefined)
+            const user_infos = await startBrowser(proxys[index], api_sim, option, browser_path, profiles_path ? `${profiles_path}\\P-${index.toString()}` : undefined)
             if(user_infos?.code === 'err') {
                 
             } else if(user_infos?.code === 'stop') {

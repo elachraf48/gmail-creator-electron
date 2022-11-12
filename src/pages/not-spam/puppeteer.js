@@ -14,7 +14,7 @@ module.exports.startBrowser = async (proxy, option, executablePath = undefined, 
             defaultViewport: null,
             args: [
                 '--start-maximized',
-                // `--proxy-server=${proxy}`
+                `--proxy-server=${proxy}`
             ]
         })
 
@@ -31,7 +31,34 @@ module.exports.startBrowser = async (proxy, option, executablePath = undefined, 
 
         await page.setDefaultTimeout(300000)
         
-        await Promise.all([page.goto('https://gmail.com/'), page.waitForNavigation()])
+        await Promise.all([page.goto('https://mail.google.com/mail/u/0/#spam'), page.waitForNavigation()])
+
+        await page.waitForSelector('table > tbody:nth-child(2) > tr')
+
+        await new Promise(async (resolve, reject) => {
+            try {
+                while(true) {
+                    await page.waitForSelector('table > tbody:nth-child(2) > tr')
+                    // await waitForSec(1000)
+                    const el = await page.$('table > tbody:nth-child(2) > tr')
+                    if(el) {
+                        await page.waitForSelector('table > tbody:nth-child(2) > tr')
+                        await waitForSec(1000)
+                        await page.click('table > tbody:nth-child(2) > tr')
+                        // await page.waitForSelector(':nth-child(1) > [role="button"][style="user-select: none;"]')
+                        // await waitForSec(1000)
+                        // await page.click(':nth-child(1) > [role="button"][style="user-select: none;"]')
+                    } else {
+                        break
+                    }
+                }
+                resolve()
+            } catch (err) {
+                reject(err)
+            }
+        })
+
+        await page.evaluate(() => alert('End'))
 
         // **************************************************************************************************************
 

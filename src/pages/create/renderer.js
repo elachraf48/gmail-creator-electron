@@ -6,6 +6,8 @@ const use_api_check = document.getElementById('use-api-check')
 const country_input = document.getElementById('country-input')
 const operator_input = document.getElementById('operator-input')
 const product_input = document.getElementById('product-input')
+const sim_provider_input = document.getElementById('sim-provider-input')
+const ath_api_key_input = document.getElementById('ath-api-key')
 
 const select_browser = document.getElementById('select-browser')
 const select_browser_text = document.getElementById('select-browser-text')
@@ -32,6 +34,8 @@ const checkAPISim = checked => {
     country_input.disabled = !checked
     operator_input.disabled = !checked
     product_input.disabled = !checked
+    sim_provider_input.disabled = !checked
+    ath_api_key_input.disabled = !checked
 }
 
 const isProxysValid = proxy => {
@@ -47,11 +51,13 @@ formSelector.addEventListener('submit', e => {
     e.preventDefault()
 
     const fields = {
-        api_5sim: {
+        api_sim: {
             enable: use_api_check.checked,
             country: country_input.value,
             operator: operator_input.value,
-            product: product_input.value
+            product: product_input.value,
+            provider: sim_provider_input.value,
+            authorization: ath_api_key_input.value
         },
         browser_path: select_browser_text.value,
         profiles_path: select_profile_path_text.value,
@@ -130,3 +136,4 @@ ipcRenderer.on('indicator-end', () => {
 use_api_check.addEventListener('change', e => checkAPISim(e.target.checked))
 
 checkAPISim(use_api_check.checked)
+ath_api_key_input.value = 'eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Nzc2MTQ1MjYsImlhdCI6MTY0NjA3ODUyNiwicmF5IjoiYTY5MjdjMjY1YmY3MjE2NmNlNjI5NmMxMDJhYTk5M2UiLCJzdWIiOjk1Nzg2N30.JzNg9T_c9ptHR4RVKd1fJx525FzK3Z35dIYGNzamlVfEjCFdmcwUbpUL-rz6cUsxYGRllXVyH56gVv_OQYORNAfchKi3EZ9thdZtbqcvTjXdBHHGhRlzDZPd-T1-IELi5xXXv3Ga_jOAYh-QWkhfiuPsYGnnuJHLrDogFCpIKp7vfeM3DM13rpxOvZS5TXTtIyWvEy7mTjWlBTnXTbvKphJ0ltOwFjxdDCQMU1R9WfJDinSdm0Zpagr_dPy6dzVmmATHpgLoYHADLpOvEejyy_7aG6y-r6YvjDuLq3NsflNR9yWfR0uHeaJxgomBAJvlNIEAoemKbT8bOhZyUuZaOA'

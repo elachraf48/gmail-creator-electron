@@ -83,16 +83,14 @@ const typeInfo = (page, option) => new Promise(async (resolve, reject) => {
     }
 })
 
-const getSimNumber = (page, { enable, country, operator, product }, option) => new Promise(async (resolve, reject) => {
+const getSimNumber = (page, { enable, country, operator, product, provider, authorization }, option) => new Promise(async (resolve, reject) => {
     let el = true
     let id
     try {
-        
-        
         while(el) {
             if(enable) {
-                const data = await getSimPhone({ country, operator, product })
-                // const data = await checkSimActivation({ sim_id: 373678700 })
+                const data = await getSimPhone({ provider, authorization, country, operator, product })
+                // const data = await checkSimActivation({ sim_id: 373678700, provider, authorization })
                 user_infos.recovery_number = data.phone
                 id = data.id
                 console.log(data)
@@ -118,7 +116,7 @@ const getSimNumber = (page, { enable, country, operator, product }, option) => n
     }
 })
 
-const getVerificationCode = (page, sim_id, enable, option) => new Promise(async (resolve, reject) => {
+const getVerificationCode = (page, sim_id, enable, provider, authorization, option) => new Promise(async (resolve, reject) => {
     let el = true
 
     try {
@@ -130,7 +128,7 @@ const getVerificationCode = (page, sim_id, enable, option) => new Promise(async 
                 await new Promise(async function(resolve, reject) {
                     try {
                         while(!verfication_code) {
-                            const data = await checkSimActivation({ sim_id })
+                            const data = await checkSimActivation({ sim_id, provider, authorization })
                             console.log(data.sms)
                             if(data?.sms && data?.sms?.length !== 0){
                                 verfication_code = data?.sms[0]?.code

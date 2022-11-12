@@ -56,7 +56,7 @@ formSelector.addEventListener('submit', e => {
 
     if(fields.proxys.some(proxy => isProxysValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy has no port!' })
     if(fields.proxys.some(proxy => !isProxysAndPortValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy are not correct!' })
-    if(parseInt(fields.profiles.to) - parseInt(fields.profiles.from) <= 0 || parseInt(fields.profiles.from) <= 0 || parseInt(fields.profiles.to) <= 0) return ipcRenderer.send('message-box', { type: 'error', message: 'Profiles are incorrect!' })
+    if(parseInt(fields.profiles.to) < parseInt(fields.profiles.from) || parseInt(fields.profiles.from) < 0) return ipcRenderer.send('message-box', { type: 'error', message: 'Profiles are incorrect!' })
     if(parseInt(fields.profiles.to) - parseInt(fields.profiles.to) > fields.proxys.length ) return ipcRenderer.send('message-box', { type: 'error', message: 'Proxys cant be less than profiles' })
 
     ipcRenderer.send('start-browser-not-spam', fields)

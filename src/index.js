@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain, dialog, pushNotifications, clipboard } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const fs = require('fs/promises')
 const path = require('path')
 const { readFile } = require('fs/promises')
 const { createWindowCreation } = require('./pages/create/index.js')
@@ -61,6 +62,9 @@ app.on('activate', () => {
   }
 })
 
+
+
+
 ipcMain.on('select-browser', async event => {
   const { filePaths, canceled } = await dialog.showOpenDialog({ defaultPath: 'C:\\Program Files\\Google\\Chrome\\Application', filters: [{ name: 'Browser', extensions: ['exe'] }] })
   if(canceled) return console.log('canceled!')
@@ -70,7 +74,11 @@ ipcMain.on('select-browser', async event => {
 ipcMain.on('select-profile-path', async event => {
   const { filePaths, canceled } = await dialog.showOpenDialog({ defaultPath: app.getPath('documents'), properties: [ 'openDirectory', 'promptToCreate' ] })
   if(canceled) return console.log('canceled!')
+
+  const result = await fs.readdir(filePaths[0])
+  
   event.reply('select-profile-path-result', filePaths[0])
+  event.reply('select-profile-path-result-count', result.filter(dir => /^(P-[0-9]{1,5})$/.exec(dir)).map(dir => dir.replace('P-', '')))
 })
 
 ipcMain.on('select-proxy-list', async event => {

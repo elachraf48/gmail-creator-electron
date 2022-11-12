@@ -8,7 +8,7 @@ module.exports.createWindowCreation = parent => {
   const mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
-    parent,
+    // parent,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -16,6 +16,8 @@ module.exports.createWindowCreation = parent => {
       devTools
     },
   })
+  
+  parent.hide()
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
   mainWindow.setMenu(null)

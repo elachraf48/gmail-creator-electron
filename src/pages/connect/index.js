@@ -5,6 +5,7 @@ const { start } = require('./start-connect.js')
 const devTools = false
 
 module.exports.createWindowConnect = parent => {
+  parent.hide()
   const mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
@@ -16,6 +17,8 @@ module.exports.createWindowConnect = parent => {
       devTools
     },    
   })
+  
+  parent.hide()
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
   mainWindow.setMenu(null)

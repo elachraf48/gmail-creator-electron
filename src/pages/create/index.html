@@ -13,13 +13,13 @@
         <div class="d-flex justify-content-between py-2">
           <h5>Gmail Creator</h5>
         </div>
-        <form class="p-2 mt-5">
+        <form class="p-2 mt-3">
           <div class="row">
             <div class="col-3 d-flex group-switch">
               <div class="form-group">
                 <div class="form-check form-switch">
                   <input class="form-check-input" type="checkbox" id="use-api-check" name="use-api-check" />
-                  <label class="form-check-label" for="use-api-check">Use 5sim api</label>
+                  <label class="form-check-label" for="use-api-check">Use SIM API</label>
                 </div>
               </div>
             </div>
@@ -39,6 +39,20 @@
               <div class="form-group mb-4">
                 <label for="product" class="visually-hidden">Product</label>
                 <input type="text" class="form-control" id="product-input" placeholder="Product" value="google" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group mb-4">
+                <label for="sim-provider" class="visually-hidden">SIM Provider</label>
+                <input type="text" class="form-control" id="sim-provider-input" placeholder="SIM Provider" value="5sim" />
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="form-group mb-4">
+                <label for="ath-api-key" class="visually-hidden">Authorization api key</label>
+                <input type="text" class="form-control" id="ath-api-key" placeholder="Authorization api key" value="" />
               </div>
             </div>
           </div>

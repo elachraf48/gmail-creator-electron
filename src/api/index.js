@@ -13,12 +13,18 @@ module.exports.getRandomUser = () => new Promise(async (resolve, reject) => {
     }
 })
 
-const get_sim = axios.create({
-    baseURL: 'https://5sim.net/v1/user/',
-    // headers: { Authorization: `Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Nzc2MTQ1MjYsImlhdCI6MTY0NjA3ODUyNiwicmF5IjoiYTY5MjdjMjY1YmY3MjE2NmNlNjI5NmMxMDJhYTk5M2UiLCJzdWIiOjk1Nzg2N30.JzNg9T_c9ptHR4RVKd1fJx525FzK3Z35dIYGNzamlVfEjCFdmcwUbpUL-rz6cUsxYGRllXVyH56gVv_OQYORNAfchKi3EZ9thdZtbqcvTjXdBHHGhRlzDZPd-T1-IELi5xXXv3Ga_jOAYh-QWkhfiuPsYGnnuJHLrDogFCpIKp7vfeM3DM13rpxOvZS5TXTtIyWvEy7mTjWlBTnXTbvKphJ0ltOwFjxdDCQMU1R9WfJDinSdm0Zpagr_dPy6dzVmmATHpgLoYHADLpOvEejyy_7aG6y-r6YvjDuLq3NsflNR9yWfR0uHeaJxgomBAJvlNIEAoemKbT8bOhZyUuZaOA` }
-})
+module.exports.getSimPhone = ({ provider, authorization, country, operator, product }) => new Promise(async (resolve, reject) => {
 
-module.exports.getSimPhone = ({ country, operator, product }) => new Promise(async (resolve, reject) => {
+    let baseURL = ''
+
+    if(provider === '5sim') baseURL = 'https://5sim.net/v1/user/'
+    else return reject({ message: 'SIM Provider is required!' })
+
+    const get_sim = axios.create({
+        baseURL,
+        headers: { Authorization: `Bearer ${authorization}` }
+    })
+    
     try {
         const { data } = await get_sim.get(`buy/activation/${country}/${operator}/${product}`)
         resolve(data)
