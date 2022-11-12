@@ -1,14 +1,15 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, pushNotifications, clipboard } = require('electron')
 const path = require('path')
 const { readFile } = require('fs/promises')
 const { createWindowCreation } = require('./pages/create/index.js')
 const { createWindowConnect } = require('./pages/connect/index.js')
+const { createWindowOpen } = require('./pages/open/index.js')
+const { createWindowWarmUp } = require('./pages/warmup/index.js')
+const { createWindowNotSpam } = require('./pages/not-spam/index.js')
 
 if (require('electron-squirrel-startup')) {
   app.quit()
 }
-
-const abc = "edffef"
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -24,30 +25,25 @@ const createWindow = () => {
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
   mainWindow.setMenu(null)
-
+  
   ipcMain.on('start-create-window', () => {
     createWindowCreation(mainWindow)
-    mainWindow.hide()
   })
   
   ipcMain.on('start-connect-window', () => {
     createWindowConnect(mainWindow)
-    mainWindow.hide()
   })
 
   ipcMain.on('start-open-window', () => {
-    createWindowConnect(mainWindow)
-    mainWindow.hide()
+    createWindowOpen(mainWindow)
   })
 
   ipcMain.on('start-not-spam-window', () => {
-    createWindowConnect(mainWindow)
-    mainWindow.hide()
+    createWindowNotSpam(mainWindow)
   })
 
   ipcMain.on('start-warmup-window', () => {
-    createWindowConnect(mainWindow)
-    mainWindow.hide()
+    createWindowWarmUp(mainWindow)
   })
 }
 

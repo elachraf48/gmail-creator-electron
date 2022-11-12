@@ -1,20 +1,20 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
-const { start } = require('./start-create.js')
+const { start } = require('./start-warmup.js')
 
 const devTools = false
 
-module.exports.createWindowCreation = parent => {
+module.exports.createWindowWarmUp = parent => {
   const mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
-    parent,
+    // parent,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
       devTools
-    },
+    },    
   })
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
@@ -25,10 +25,4 @@ module.exports.createWindowCreation = parent => {
   mainWindow.on('close', () => parent.show())
 }
 
-ipcMain.on('save-data-path', async event => {
-  const { filePath, canceled } = await dialog.showSaveDialog({ defaultPath: `${app.getPath('documents')}/users.json`, filters:[{ name: 'JSON File', extensions: ['json'] }] })
-  if(canceled) return console.log('canceled!')
-  event.reply('save-data-path-result', filePath)
-})
-
-ipcMain.on('start-browser-create', (event, data) => start(data, event.sender))
+ipcMain.on('start-browser-warmup', (event, data) => start(data, event.sender))

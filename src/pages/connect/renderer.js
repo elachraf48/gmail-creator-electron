@@ -53,6 +53,7 @@ formSelector.addEventListener('submit', e => {
 
     if(fields.proxys.some(proxy => isProxysValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy has no port!' })
     if(fields.proxys.some(proxy => !isProxysAndPortValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy are not correct!' })
+    if(fields.proxys.length === 0) return ipcRenderer.send('message-box', { type: 'error', message: 'User data is empty!' })
 
     ipcRenderer.send('start-browser-connect', fields)
 })

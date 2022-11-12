@@ -2,19 +2,14 @@ const { ipcRenderer } = require('electron')
 
 const formSelector = document.querySelector('form')
 
-const use_api_check = document.getElementById('use-api-check')
-const country_input = document.getElementById('country-input')
-const operator_input = document.getElementById('operator-input')
-const product_input = document.getElementById('product-input')
-
 const select_browser = document.getElementById('select-browser')
 const select_browser_text = document.getElementById('select-browser-text')
 
 const select_profile_path = document.getElementById('select-profile-path')
 const select_profile_path_text = document.getElementById('select-profile-path-text')
 
-const save_data = document.getElementById('save-data')
-const save_data_text = document.getElementById('save-data-text')
+const profile_from = document.getElementById('profile-from')
+const profile_to = document.getElementById('profile-to')
 
 const select_proxys = document.getElementById('select-proxys')
 const proxys_port = document.getElementById('proxys-port')
@@ -47,33 +42,24 @@ formSelector.addEventListener('submit', e => {
     e.preventDefault()
 
     const fields = {
-        api_5sim: {
-            enable: use_api_check.checked,
-            country: country_input.value,
-            operator: operator_input.value,
-            product: product_input.value
-        },
         browser_path: select_browser_text.value,
         profiles_path: select_profile_path_text.value,
-        save_file_path: save_data_text.value,
+        profiles: {
+            from: profile_from.value,
+            to: profile_to.value
+        },
         option: {
             delay: option_delay.value
         },
         proxys: proxy_list.value.split('\n')
     }
 
-    // if(fields.api_5sim.enable) {
-    //     if(!fields.api_5sim.country || !fields.api_5sim.operator || !fields.api_5sim.product || !fields.browser_path || fields.option.delay !== '' || !fields.proxys.length || !fields.save_file_path) return ipcRenderer.send('message-box', { type: 'error', message: 'fields are required' })
-    // }
-    // else {
-    //     if(!fields.browser_path || fields.option.delay !== '' || !fields.proxys.length || !fields.save_file_path) return ipcRenderer.send('message-box', { type: 'error', message: 'fields are required' })
-    // }
-
     if(fields.proxys.some(proxy => isProxysValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy has no port!' })
     if(fields.proxys.some(proxy => !isProxysAndPortValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy are not correct!' })
-    if(fields.proxys.length === 0) return ipcRenderer.send('message-box', { type: 'error', message: 'User data is empty!' })
+    if(parseInt(fields.profiles.to) - parseInt(fields.profiles.from) <= 0 || parseInt(fields.profiles.from) <= 0 || parseInt(fields.profiles.to) <= 0) return ipcRenderer.send('message-box', { type: 'error', message: 'Profiles are incorrect!' })
+    if(parseInt(fields.profiles.to) - parseInt(fields.profiles.to) > fields.proxys.length ) return ipcRenderer.send('message-box', { type: 'error', message: 'Proxys cant be less than profiles' })
 
-    ipcRenderer.send('start-browser-create', fields)
+    ipcRenderer.send('start-browser-open', fields)
 })
 
 stop_btn.addEventListener('click', () => {
@@ -82,7 +68,6 @@ stop_btn.addEventListener('click', () => {
 
 select_browser.addEventListener('click', () => ipcRenderer.send('select-browser'))
 select_profile_path.addEventListener('click', () => ipcRenderer.send('select-profile-path'))
-save_data.addEventListener('click', () => ipcRenderer.send('save-data-path'))
 select_proxys.addEventListener('click', () => ipcRenderer.send('select-proxy-list'))
 
 proxys_port_seter.addEventListener('click', () => {
@@ -99,10 +84,6 @@ ipcRenderer.on('select-profile-path-result', (_, data) => {
     select_profile_path_text.value = data
 })
 
-ipcRenderer.on('save-data-path-result', (_, data) => {
-    save_data_text.value = data
-})
-
 ipcRenderer.on('select-proxy-list-result', (_, data) => {
     proxy_list.value = data
 })
@@ -116,7 +97,7 @@ ipcRenderer.on('indicator-result', (_, { value, from, proxy }) => {
         stop_btn.classList.add('d-none')
         start_btn.classList.remove('d-none')
     }
-
+    
     if(isProxysAndPortValid(proxy)) proxy_list.value = proxy_list.value.split('\n').filter(p => p !== proxy).join('\n')
 })
 
@@ -125,6 +106,7 @@ ipcRenderer.on('indicator-end', () => {
     stop_btn.classList.add('d-none')
     start_btn.classList.remove('d-none')
 
+    if(isProxysAndPortValid(proxy)) proxy_list.value = proxy_list.value.split('\n').filter(p => p !== proxy).join('\n')
 })
 
 use_api_check.addEventListener('change', e => checkAPISim(e.target.checked))

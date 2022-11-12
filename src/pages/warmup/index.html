@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gmail Creator</title>
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="index.css" />
+    <script defer src="renderer.js"></script>
+  </head>
+  <body>
+    <div class="content-wrapper d-flex flex-row">
+      <div class="page-content p-4">
+        <div class="d-flex justify-content-between py-2">
+          <h5>Gmail Connector</h5>
+        </div>
+        <form class="p-2 mt-5">
+          <div class="row mb-4">
+            <div class="col-3">
+              <div>
+                <input type="button" class="form-control" id="select-browser" value="Select Browser" />
+              </div>
+            </div>
+            <div class="col-9">
+              <div>
+                <input type="text" readonly class="form-control" id="select-browser-text" />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-3">
+              <div>
+                <input type="button" class="form-control" id="select-profile-path" value="Select Profiles Folder" />
+              </div>
+            </div>
+            <div class="col-9">
+              <div>
+                <input type="text" readonly class="form-control" id="select-profile-path-text" />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-6">
+              <div>
+                <input type="number" class="form-control" id="profile-from" placeholder="from" value="0" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div>
+                <input type="number" class="form-control" id="profile-to" placeholder="to" value="0" />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-3">
+              <div>
+                <input type="button" class="form-control" id="select-proxys" value="Select proxys list" />
+              </div>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-3">
+              <div>
+                <input type="number" class="form-control" id="proxys-port" value="92" />
+              </div>
+            </div>
+            <div class="col-3">
+              <div>
+                <input type="button" class="form-control" id="proxys-port-seter" value="Set" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group mb-4">
+            <label for="proxy-list" class="visually-hidden">List of proxys</label>
+            <textarea class="form-control" id="proxy-list" rows="5" placeholder="List of proxys"></textarea>
+          </div>
+          <div class="row mb-4">
+            <div class="col-4">
+              <div class="form-group">
+                <label for="option-delay" class="visually-hidden">Option delay ms</label>
+                <input type="number" class="form-control" id="option-delay" placeholder="Option delay ms" value="100" />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <input type="text" readonly class="form-control text-center" id="indicator" />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary form-control" id="start-btn">Start</button>
+                <button type="button" class="btn btn-danger form-control d-none" id="stop-btn">Stop</button>
+                </div>
+              </div>
+          </div>
+        </form>
+    </div>
+  </div>
+  </body>
+</html>

@@ -8,7 +8,7 @@ module.exports.createWindowConnect = parent => {
   const mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
-    parent,
+    // parent,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -20,6 +20,9 @@ module.exports.createWindowConnect = parent => {
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
   mainWindow.setMenu(null)
   if(devTools) mainWindow.webContents.openDevTools()
+
+  mainWindow.on('ready-to-show', () => parent.hide())
+  mainWindow.on('close', () => parent.show())
 }
 
 ipcMain.on('import-users-path', async event => {
