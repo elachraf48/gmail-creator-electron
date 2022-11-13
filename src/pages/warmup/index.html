@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Gmail WarmUp</title>
+    <title>Gmail Connector</title>
     <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="index.css" />
     <script defer src="renderer.js"></script>
@@ -11,7 +11,7 @@
     <div class="content-wrapper d-flex flex-row">
       <div class="page-content p-4">
         <div class="d-flex justify-content-between py-2">
-          <h5>Gmail WarmUp</h5>
+          <h5>Gmail Connector</h5>
         </div>
         <form class="p-2 mt-5">
           <div class="row mb-4">
@@ -39,18 +39,6 @@
             </div>
           </div>
           <div class="row mb-4">
-            <div class="col-6">
-              <div>
-                <input type="number" class="form-control" id="profile-from" placeholder="from" value="0" />
-              </div>
-            </div>
-            <div class="col-6">
-              <div>
-                <input type="number" class="form-control" id="profile-to" placeholder="to" value="0" />
-              </div>
-            </div>
-          </div>
-          <div class="row mb-4">
             <div class="col-3">
               <div>
                 <input type="button" class="form-control" id="select-proxys" value="Select proxys list" />
@@ -71,6 +59,18 @@
           <div class="form-group mb-4">
             <label for="proxy-list" class="visually-hidden">List of proxys</label>
             <textarea class="form-control" id="proxy-list" rows="5" placeholder="List of proxys"></textarea>
+          </div>
+          <div class="row mb-4">
+            <div class="col-3">
+              <div>
+                <input type="button" class="form-control" id="import-users" value="Import users" />
+              </div>
+            </div>
+            <div class="col-9">
+              <div>
+                <input type="text" readonly class="form-control" id="import-users-text" />
+              </div>
+            </div>
           </div>
           <div class="row mb-4">
             <div class="col-4">

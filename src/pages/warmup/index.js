@@ -5,6 +5,7 @@ const { start } = require('./start-warmup.js')
 const devTools = false
 
 module.exports.createWindowWarmUp = parent => {
+  parent.hide()
   const mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
@@ -27,4 +28,10 @@ module.exports.createWindowWarmUp = parent => {
   mainWindow.on('close', () => parent.show())
 }
 
-ipcMain.on('start-browser-warmup', (event, data) => start(data, event.sender))
+ipcMain.on('import-users-path', async event => {
+  const { filePaths, canceled } = await dialog.showOpenDialog({ defaultPath: `${app.getPath('documents')}/users.json`, filters:[{ name: 'JSON File', extensions: ['json'] }] })
+  if(canceled) return console.log('canceled!')
+  event.reply('import-users-path-result', filePaths[0])
+})
+
+ipcMain.on('start-browser-connect', (event, data) => start(data, event.sender))

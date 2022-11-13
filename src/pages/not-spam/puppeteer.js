@@ -33,24 +33,18 @@ module.exports.startBrowser = async (proxy, option, executablePath = undefined, 
         
         await Promise.all([page.goto('https://mail.google.com/mail/u/0/#spam'), page.waitForNavigation()])
 
-        await page.waitForSelector('table > tbody:nth-child(2) > tr')
-
         await new Promise(async (resolve, reject) => {
             try {
                 while(true) {
-                    await page.waitForSelector('table > tbody:nth-child(2) > tr')
+                    await page.waitForSelector('div.BltHke.nH.oy8Mbf > div > div > div > table > tbody > tr')
+                    await page.click('div.BltHke.nH.oy8Mbf > div > div > div > table > tbody > tr')
                     // await waitForSec(1000)
-                    const el = await page.$('table > tbody:nth-child(2) > tr')
-                    if(el) {
-                        await page.waitForSelector('table > tbody:nth-child(2) > tr')
-                        await waitForSec(1000)
-                        await page.click('table > tbody:nth-child(2) > tr')
-                        // await page.waitForSelector(':nth-child(1) > [role="button"][style="user-select: none;"]')
-                        // await waitForSec(1000)
-                        // await page.click(':nth-child(1) > [role="button"][style="user-select: none;"]')
-                    } else {
-                        break
-                    }
+                    await page.waitForSelector('button.bzq.bzr.IdsTHf')
+                    await page.click('button.bzq.bzr.IdsTHf')
+                    await waitForSec(1000)
+                    const el = await page.$('div.BltHke.nH.oy8Mbf > div > div > div > table > tbody > tr')
+                    if(!el) break
+
                 }
                 resolve()
             } catch (err) {
@@ -60,9 +54,7 @@ module.exports.startBrowser = async (proxy, option, executablePath = undefined, 
 
         await page.evaluate(() => alert('End'))
 
-        // **************************************************************************************************************
-
-        console.log(`from ${profiles.from} to ${profiles.to}`)
+        await Promise.all([page.goto('https://mail.google.com/mail/u/0/'), page.waitForNavigation()])
 
         // await page.waitForNavigation()
         // await browser.close()

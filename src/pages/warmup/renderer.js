@@ -8,8 +8,8 @@ const select_browser_text = document.getElementById('select-browser-text')
 const select_profile_path = document.getElementById('select-profile-path')
 const select_profile_path_text = document.getElementById('select-profile-path-text')
 
-const profile_from = document.getElementById('profile-from')
-const profile_to = document.getElementById('profile-to')
+const import_users = document.getElementById('import-users')
+const import_users_text = document.getElementById('import-users-text')
 
 const select_proxys = document.getElementById('select-proxys')
 const proxys_port = document.getElementById('proxys-port')
@@ -44,10 +44,7 @@ formSelector.addEventListener('submit', e => {
     const fields = {
         browser_path: select_browser_text.value,
         profiles_path: select_profile_path_text.value,
-        profiles: {
-            from: profile_from.value,
-            to: profile_to.value
-        },
+        import_users_path: import_users_text.value,
         option: {
             delay: option_delay.value
         },
@@ -56,10 +53,9 @@ formSelector.addEventListener('submit', e => {
 
     if(fields.proxys.some(proxy => isProxysValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy has no port!' })
     if(fields.proxys.some(proxy => !isProxysAndPortValid(proxy))) return ipcRenderer.send('message-box', { type: 'error', message: 'One or more proxy are not correct!' })
-    if(parseInt(fields.profiles.to) - parseInt(fields.profiles.from) <= 0 || parseInt(fields.profiles.from) < 0) return ipcRenderer.send('message-box', { type: 'error', message: 'Profiles are incorrect!' })
-    if(parseInt(fields.profiles.to) - parseInt(fields.profiles.to) > fields.proxys.length ) return ipcRenderer.send('message-box', { type: 'error', message: 'Proxys cant be less than profiles' })
+    if(fields.proxys.length === 0) return ipcRenderer.send('message-box', { type: 'error', message: 'User data is empty!' })
 
-    ipcRenderer.send('start-browser-warmup', fields)
+    ipcRenderer.send('start-browser-connect', fields)
 })
 
 stop_btn.addEventListener('click', () => {
@@ -68,6 +64,7 @@ stop_btn.addEventListener('click', () => {
 
 select_browser.addEventListener('click', () => ipcRenderer.send('select-browser'))
 select_profile_path.addEventListener('click', () => ipcRenderer.send('select-profile-path'))
+import_users.addEventListener('click', () => ipcRenderer.send('import-users-path'))
 select_proxys.addEventListener('click', () => ipcRenderer.send('select-proxy-list'))
 
 proxys_port_seter.addEventListener('click', () => {
@@ -82,6 +79,10 @@ ipcRenderer.on('select-browser-result', (_, data) => {
 
 ipcRenderer.on('select-profile-path-result', (_, data) => {
     select_profile_path_text.value = data
+})
+
+ipcRenderer.on('import-users-path-result', (_, data) => {
+    import_users_text.value = data
 })
 
 ipcRenderer.on('select-proxy-list-result', (_, data) => {

@@ -13,7 +13,7 @@ module.exports.start = async (fields, sender) => {
             } else if(user_infos?.code === 'stop') {
                 break
             } else {
-
+                
             }
         }
         sender.send('indicator-end')
