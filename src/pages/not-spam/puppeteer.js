@@ -38,7 +38,7 @@ module.exports.startBrowser = async (proxy, option, executablePath = undefined, 
                 while(true) {
                     await page.waitForSelector('div.BltHke.nH.oy8Mbf > div > div > div > table > tbody > tr')
                     await page.click('div.BltHke.nH.oy8Mbf > div > div > div > table > tbody > tr')
-                    // await waitForSec(1000)
+                    await waitForSec(1000)
                     await page.waitForSelector('button.bzq.bzr.IdsTHf')
                     await page.click('button.bzq.bzr.IdsTHf')
                     await waitForSec(1000)

@@ -41,3 +41,15 @@ module.exports.checkSimActivation = ({ sim_id }) => new Promise(async (resolve, 
         reject(err)
     }
 })
+
+module.exports.randome_fact = () => new Promise(async (resolve, reject) => {
+    try {
+        const api = axios.create({
+            baseURL: `https://uselessfacts.jsph.pl/random.json`
+          })
+        const { data } = await api.get('', { params: { language: 'en' } })
+        resolve({ subject: data.text.split(' ').slice(0,3).join(' '), mail_text: data.text })
+    } catch (err) {
+        reject(err)
+    }
+})

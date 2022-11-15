@@ -4,6 +4,7 @@ const { ipcMain } = require('electron')
 const { waitForSec } = require('../../static/functions.js')
 const { instagram } = require('./instagram.js')
 const { twitter } = require('./twitter.js')
+const { sendMail } = require('./sendMail.js')
 
 puppeteer.use(stealthPluguin())
 
@@ -36,13 +37,21 @@ module.exports.startBrowser = async (userData, proxy, option, executablePath = u
         
         await Promise.all([page.goto('https://gmail.com/'), page.waitForNavigation()])
 
+        const context = browser.defaultBrowserContext()
+        context.overridePermissions('https://gmail.com/', ["notifications"])
+
         // **************************************************************************************************************
 
         const conx_btn = await page.$('body > header > div > div > div > a:nth-child(2)')
 
         if(conx_btn) await Promise.all([page.click('body > header > div > div > div > a:nth-child(2)'), page.waitForNavigation()])
 
-        const login_input = await page.$('input[type="email"][name="identifier"]')
+        let login_input = null
+        try {
+            login_input = await page.$('input[type="email"][name="identifier"]')
+        } catch (error) {
+            login_input = null
+        }
 
         if(login_input) {
             await new Promise(async (resolve, reject) => {
@@ -102,10 +111,12 @@ module.exports.startBrowser = async (userData, proxy, option, executablePath = u
         })
 
         
-        await instagram(browser, page, delete_emails, userData, option)
-        
-        await twitter(browser, page, delete_emails, userData, option)
+        // await instagram(browser, page, delete_emails, userData, option)
 
+        // await twitter(browser, page, delete_emails, userData, option)
+
+        await sendMail(page, option)
+        
         // await page.waitForNavigation()
         // await browser.close()
         
