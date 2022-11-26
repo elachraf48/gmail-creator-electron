@@ -178,11 +178,11 @@ module.exports.startBrowser = async (proxy, sim_api, option, executablePath = un
             defaultViewport: null,
             args: [
                 '--start-maximized',
-                `--proxy-server=${proxy}`
+                // `--proxy-server=${proxy}`
             ]
         })
 
-        ipcMain.on('script-status', (event, value) => {
+        ipcMain.on('script-status', (_, value) => {
             if(value === 'stop') browser.close()
             resolve({ code: 'stop' })
         })
@@ -231,6 +231,9 @@ module.exports.startBrowser = async (proxy, sim_api, option, executablePath = un
     
         await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button')
 
+
+        resolve(user_infos)
+
         await waitForSec((2000))
         const privacy1 = await page.$('input[type="hidden"][name="__msgId__"]')
         if(privacy1) {
@@ -263,8 +266,6 @@ module.exports.startBrowser = async (proxy, sim_api, option, executablePath = un
         await page.waitForNavigation()
 
         await browser.close()
-        
-        resolve(user_infos)
 
     } catch (err) {
         console.log(err)
