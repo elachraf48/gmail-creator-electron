@@ -1,4 +1,3 @@
-const { dir } = require('console')
 const { ipcRenderer } = require('electron')
 const { readdir } = require('fs/promises')
 
