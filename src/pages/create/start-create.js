@@ -9,13 +9,13 @@ module.exports.start = async (fields, sender) => {
     try {
         for(let index in proxys) {
             sender.send('indicator-result', { value: parseInt(index) + 1, from: proxys.length, proxy: proxys[index] })
-            const user_infos = await startBrowser(proxys[index], api_sim, option, browser_path, profiles_path ? `${profiles_path}\\P-${index.toString()}` : undefined)
+            const user_infos = await startBrowser(proxys[index], api_sim, option, browser_path, profiles_path ? `${profiles_path}\\P-${index.toString()}` : undefined, save_file_path)
             if(user_infos?.code === 'err') {
                 
             } else if(user_infos?.code === 'stop') {
                 break
             } else {
-               await saveToFile(save_file_path, user_infos)
+            //    await saveToFile(save_file_path, user_infos)
             }
         }
         sender.send('indicator-end')
@@ -24,7 +24,7 @@ module.exports.start = async (fields, sender) => {
             buttons: ['Dismiss'],
             title: 'status'
         })
-    } catch (err) {
-        console.log(err)
+    } catch ({ message }) {
+        console.log(message)
     }
 }

@@ -3,6 +3,7 @@ const stealthPluguin = require('puppeteer-extra-plugin-stealth')
 const { ipcMain } = require('electron')
 const { getRandomUser, getSimPhone, checkSimActivation } = require('../../api/index.js')
 const { random_email, random_password, waitForSec } = require('../../static/functions.js')
+const { saveToFile } = require('../../static/fileSaver.js')
 
 puppeteer.use(stealthPluguin())
 
@@ -52,7 +53,8 @@ const typeInfo = (page, option) => new Promise(async (resolve, reject) => {
                     year: user.dob.date.split('T')[0].split('-')[0],
                     month: user.dob.date.split('T')[0].split('-')[1],
                     day: user.dob.date.split('T')[0].split('-')[2]
-                }
+                },
+                picture: user.picture.large
             }
 
             const type_input = (selector, text) => new Promise(async (resolve, reject) => {
@@ -165,7 +167,7 @@ const getVerificationCode = (page, sim_id, enable, provider, authorization, opti
     }
 })
 
-module.exports.startBrowser = async (proxy, sim_api, option, executablePath = undefined, userDataDir = undefined) => new Promise(async (resolve, reject) => {
+module.exports.startBrowser = async (proxy, sim_api, option, executablePath = undefined, userDataDir = undefined, fileName) => new Promise(async (resolve, reject) => {
 
     // (index, proxy_list[index], sim_api, type_option, browserPath, profilesPath)
 
@@ -231,8 +233,12 @@ module.exports.startBrowser = async (proxy, sim_api, option, executablePath = un
     
         await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button')
 
+<<<<<<< Updated upstream
 
         resolve(user_infos)
+=======
+        await saveToFile(fileName, user_infos)
+>>>>>>> Stashed changes
 
         await waitForSec((2000))
         const privacy1 = await page.$('input[type="hidden"][name="__msgId__"]')
@@ -267,8 +273,9 @@ module.exports.startBrowser = async (proxy, sim_api, option, executablePath = un
 
         await browser.close()
 
-    } catch (err) {
-        console.log(err)
+        resolve(user_infos)
+    } catch ({ message }) {
+        console.log(message)
         resolve({ ...err, code: 'err' })
     }
 })
