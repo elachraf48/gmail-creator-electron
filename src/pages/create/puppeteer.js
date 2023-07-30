@@ -233,12 +233,9 @@ module.exports.startBrowser = async (proxy, sim_api, option, executablePath = un
     
         await page.click('#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button')
 
-<<<<<<< Updated upstream
 
         resolve(user_infos)
-=======
         await saveToFile(fileName, user_infos)
->>>>>>> Stashed changes
 
         await waitForSec((2000))
         const privacy1 = await page.$('input[type="hidden"][name="__msgId__"]')
